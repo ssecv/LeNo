@@ -37,16 +37,6 @@ def main():
             # for i in open(fileNameList, 'r'):
             #     objNameList.append(i.replace('\n', ''))
 
-            # originl2p
-            # fgsm /PASCAL-S MAE: 0.1629 maxF: 0.7268   /DUT-OMRON MAE: 0.1294 maxF: 0.6393    /DUTS-TE MAE: 0.1306 maxF: 0.6534
-            #      /HKU-IS MAE: 0.1142 maxF: 0.7762     /ECSSD MAE: 0.1310 maxF: 0.7926        /SOD MAE: 0.2045 maxF: 0.6879
-            # rosa /PASCAL-S MAE: 0.1451 maxF: 0.7635   /DUT-OMRON MAE: 0.1207 maxF: 0.6801    /DUTS-TE MAE: 0.1194 maxF: 0.7023
-            #      /HKU-IS MAE: 0.1009 maxF: 0.8171     /ECSSD MAE: 0.1083 maxF: 0.8454        /SOD MAE: 0.1782 maxF: 0.7388
-            # pgd /PASCAL-S  MAE: 0.1761 maxF: 0.6997   /DUT-OMRON MAE: 0.1460 maxF: 0.6055     /DUTS-TE MAE: 0.1450 maxF: 0.6234
-            #     /HKU-IS MAE: 0.1257 maxF: 0.7515      /ECSSD MAE: 0.1388 maxF: 0.7769         /SOD MAE: 0.2139 maxF: 0.6680
-            # image /PASCAL-S MAE: 0.1436 maxF: 0.7661   /DUT-OMRON MAE: 0.1190 maxF: 0.6850    /DUTS-TE  MAE: 0.1185 maxF: 0.7063
-            #       /HKU-IS MAE: 0.0986 maxF: 0.8244     /ECSSD MAE: 0.1097 maxF: 0.8355        /SOD MAE: 0.1774 maxF: 0.7402
-
             root1 = os.path.join(root, 'image')
             img_list = [os.path.splitext(f)[0] for f in os.listdir(root1) if f.endswith('.jpg')]
             for idx, img_name in enumerate(img_list):
