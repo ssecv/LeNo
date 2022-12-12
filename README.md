@@ -11,7 +11,9 @@ Our code is tested on python3.6, pytorch1.9.0 and cuda11.6
 1.Set the path of testing sets in config.py<br>
 2.Run test.py
 ## Trained Model
-You can download the trained ResNet-50 GateNet model at
+You can download the trained ResNet-50 GateNet model at [Baidu(jq0a)](https://pan.baidu.com/s/1DX-pcdeolnNDu-gf1tBqqQ)
 ## Citation
 ## Acknowledgement
-We implement this project based on the code of 'Learn2perturb: an end-to-end feature perturbation learning to improve adversarial robustness', proposed by Jeddi, A.; Shafiee, M. J.; Karg, M.; Scharfenberger, C.; and Wong, A. in CVPR. 
+We implement this project based on the code of<br> 
+'Suppress and balance: A simple gated network for salient object detection', proposed by Zhao, X., Pang, Y., Zhang, L., Lu, H., and Zhang, L. in European conference on computer vision.<br>
+'Learn2perturb: an end-to-end feature perturbation learning to improve adversarial robustness', proposed by Jeddi, A., Shafiee, M. J., Karg, M.,  Scharfenberger, C. and Wong, A. in CVPR. 
