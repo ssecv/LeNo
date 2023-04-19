@@ -1,0 +1,68 @@
+import torch
+from torch import nn
+from torch import optim
+from torch.autograd import Variable
+from torchvision import transforms
+from model import GateNet, Bottleneck
+from torch.backends import cudnn
+import os
+from PIL import Image
+import cv2
+
+
+img_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+])
+target_transform = transforms.ToTensor()
+
+criterion = nn.BCEWithLogitsLoss().cuda()
+cudnn.benchmark = True
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+test_datasets = ['/media/godson/D/ParcharmProject/GateNet/data/DUTS/DUTS-TE']  # test_datasets_name
+
+def main():
+    model = GateNet(Bottleneck, [3, 4, 6, 3])
+    model.load_state_dict(torch.load('/media/godson/D/ParcharmProject/GateNet/weight/100000_res50.pth'))
+    net = model.cuda().eval()
+    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    attack(net, optimizer)
+
+def attack(net, optimizer):
+    MAX_ITER = 10
+    step_size = 0.02
+    for root in test_datasets:
+        img_list = [os.path.splitext(f)[0] for f in os.listdir(root + '/image') if f.endswith('.jpg')]
+        for idx, img_name in enumerate(img_list):
+            print(img_name)
+            img1=cv2.imread(os.path.join(root, 'image/' + img_name + '.jpg'))
+            inputs = Variable(img_transform(img1).unsqueeze(0), volatile=True).cuda()
+            inputs.requires_grad = True
+            max, min = torch.max(inputs), torch.min(inputs)
+
+            labels = Image.open(os.path.join(root, 'mask/' + img_name + '.png')).convert('L')
+            labels = Variable(target_transform(labels).unsqueeze(0), volatile=True).cuda()
+
+            iter = 0
+            while iter < MAX_ITER:
+                iter = iter + 1
+                output_final = net(inputs)
+                loss = criterion(output_final, labels)
+
+                optimizer.zero_grad()
+                loss.backward()
+                r = torch.sign(inputs.grad)
+                inputs.data = inputs.data + step_size * r
+                inputs.data = torch.clip(inputs.data, min=min, max=max)
+
+            ori = inputs.squeeze().cpu().detach().numpy()
+            ori = ori.transpose(1, 2, 0)
+            mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
+            ori = ori * std + mean
+            cv2.imwrite(root + '/' + img_name + '.jpg', ori * 255)
+
+            optimizer.zero_grad()
+
+
+if __name__ == '__main__':
+    main()
